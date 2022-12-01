@@ -43,8 +43,8 @@ extension Day1 {
     func calculateHighest3() -> Int {
         let count = calories.count
         
-        return calories[calories.count-1]
-        + calories[calories.count-2]
-        + calories[calories.count-3]
+        return calories[count-1]
+        + calories[count-2]
+        + calories[count-3]
     }
 }
