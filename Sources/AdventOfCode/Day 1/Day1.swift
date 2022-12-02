@@ -17,8 +17,6 @@ struct Day1: Solution {
             }
             .compactMap { $0.reduce(0, +) }
             .sorted()
-        
-        print(calories)
     }
 
     /// Return your answer to the main activity of the advent calendar
