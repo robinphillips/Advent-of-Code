@@ -1,33 +1,44 @@
 struct Day2: Solution {
     static let day = 2
     
-    var total: Int = 0
+    var inputStrings: [[String]] = []
     
     init(input: String) {
-        total = input
+        inputStrings = input
             .components(separatedBy: .newlines)
             .filter { !$0.isEmpty }
             .compactMap{
                 $0.components(separatedBy: .whitespaces)
-            }
-            .compactMap {
-                calculateIndividualScorePart2(first: $0[0], second: $0[1])
-            }
-            .reduce(0, +)
-        
-        print(total)
+            }  
     }
 
     func calculatePartOne() -> Int {
-        total
+        calculateTotalPart1()
     }
     
     func calculatePartTwo() -> Int {
-        total
+        calculateTotalPart2()
     }
 }
 
 extension Day2 {
+    func calculateTotalPart1() -> Int {
+        inputStrings
+            .compactMap {
+                calculateIndividualScorePart1(first: $0[0], second: $0[1])
+            }
+            .reduce(0, +)
+    }
+    
+    func calculateTotalPart2() -> Int {
+        inputStrings
+            .compactMap {
+                calculateIndividualScorePart2(first: $0[0], second: $0[1])
+            }
+            .reduce(0, +)
+    }
+    
+    
     func calculateIndividualScorePart1(first: String, second: String) -> Int {
         
         switch first {
