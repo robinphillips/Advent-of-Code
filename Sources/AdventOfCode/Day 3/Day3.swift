@@ -43,6 +43,3 @@ extension Day3 {
             }.reduce(0, +)
     }
 }
-
-
-
