@@ -27,14 +27,18 @@ struct Day4: Solution {
             
             return (ints[0], ints[1], ints[2], ints[3])
         }
+        
+        func processOverlappingElves() {
+            
+        }
     }
 
     func calculatePartOne() -> Int {
-        return fullyOverlappingPairs()
+        fullyOverlappingPairs()
     }
     
     func calculatePartTwo() -> Int {
-        0
+        partiallyOverlappingPairs()
     }
 }
 
@@ -43,7 +47,16 @@ extension Day4 {
         var count = 0
         elfPairs
             .forEach {
-                if $0.fullyOverlapping { count += 1 }
+                if $0.containsFullyOverlapping { count += 1 }
+            }
+        return count
+    }
+    
+    func partiallyOverlappingPairs() -> Int {
+        var count = 0
+        elfPairs
+            .forEach {
+                if $0.overlapsAtAll { count += 1 }
             }
         return count
     }
