@@ -5,9 +5,9 @@ final class Day5Tests: XCTestCase, SolutionTest {
     typealias SUT = Day5
     
     var testSupplies: [Stack] = [
-        Stack(id: 1, crates: ["Z", "N"]),
-        Stack(id: 2, crates: ["M", "C", "D"]),
-        Stack(id: 3, crates: ["P"])
+        Stack(crates: ["Z", "N"]),
+        Stack(crates: ["M", "C", "D"]),
+        Stack(crates: ["P"])
     ]
     
     func testPartOne() throws {

@@ -14,15 +14,15 @@ struct Day5: Solution {
             }
 
         startSupplies = [
-            Stack(id: 1, crates: ["B", "S", "V", "Z", "G", "P", "W"]),
-            Stack(id: 2, crates: ["J", "V", "B", "C", "Z", "F"]),
-            Stack(id: 3, crates: ["V", "L", "M", "H", "N", "Z", "D", "C"]),
-            Stack(id: 4, crates: ["L", "D", "M", "Z", "P", "F", "J", "B"]),
-            Stack(id: 5, crates: ["V", "F", "C", "G", "J", "B", "Q", "H"]),
-            Stack(id: 6, crates: ["G", "F", "Q", "T", "S", "L", "B"]),
-            Stack(id: 7, crates: ["L", "G", "C", "Z", "V"]),
-            Stack(id: 8, crates: ["N", "L", "G"]),
-            Stack(id: 9, crates: ["J", "F", "H", "C"])
+            Stack(crates: ["B", "S", "V", "Z", "G", "P", "W"]),
+            Stack(crates: ["J", "V", "B", "C", "Z", "F"]),
+            Stack(crates: ["V", "L", "M", "H", "N", "Z", "D", "C"]),
+            Stack(crates: ["L", "D", "M", "Z", "P", "F", "J", "B"]),
+            Stack(crates: ["V", "F", "C", "G", "J", "B", "Q", "H"]),
+            Stack(crates: ["G", "F", "Q", "T", "S", "L", "B"]),
+            Stack(crates: ["L", "G", "C", "Z", "V"]),
+            Stack(crates: ["N", "L", "G"]),
+            Stack(crates: ["J", "F", "H", "C"])
         ]
     }
     
