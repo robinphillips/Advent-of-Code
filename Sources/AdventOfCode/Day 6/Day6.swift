@@ -3,12 +3,10 @@ import Algorithms
 struct Day6: Solution {
     static let day = 6
     
-    let signal: [String]
+    let input: String
     
     init(input: String) {
-        signal = input
-            .compactMap { String($0) }
-            .filter { $0.isNotEmpty }
+        self.input = input
     }
 
     func calculatePartOne() -> Int {
@@ -22,8 +20,7 @@ struct Day6: Solution {
 
 extension Day6 {
     func processSignalSearch(lengthOfStart: Int) -> Int? {
-        let windowed = signal
-            .joined()
+        let windowed = input
             .windows(ofCount: lengthOfStart)
             .compactMap(String.init)
         
