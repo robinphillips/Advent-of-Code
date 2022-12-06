@@ -10,28 +10,27 @@ struct Day6: Solution {
     }
 
     func calculatePartOne() -> Int {
-        processSignalSearch(lengthOfStart: 4) ?? 0
+        processSignalSearch(lengthOfStart: 4)
     }
     
     func calculatePartTwo() -> Int {
-        processSignalSearch(lengthOfStart: 14) ?? 0
+        processSignalSearch(lengthOfStart: 14)
     }
 }
 
 extension Day6 {
-    func processSignalSearch(lengthOfStart: Int) -> Int? {
+    func processSignalSearch(lengthOfStart: Int) -> Int {
         let windowed = input
             .windows(ofCount: lengthOfStart)
             .compactMap(String.init)
         
-        for i in 0..<windowed.count {
-            let tempSet: Set<String> = Set(
-                windowed[i].compactMap { String($0)}
-            )
-            if tempSet.count == lengthOfStart {
-                return (i+lengthOfStart)
-            }
-        }
-        return nil
+        let index = windowed
+            .firstIndex { string in
+                Set(
+                    string.compactMap { String($0)}
+                ).count == lengthOfStart
+            } ?? 0
+
+        return (index + lengthOfStart)
     }
 }
