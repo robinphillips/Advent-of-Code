@@ -8,7 +8,7 @@ struct Day6: Solution {
     init(input: String) {
         signal = input
             .compactMap { String($0) }
-            .filter { !$0.isEmpty }
+            .filter { $0.isNotEmpty }
     }
 
     func calculatePartOne() -> Int {
