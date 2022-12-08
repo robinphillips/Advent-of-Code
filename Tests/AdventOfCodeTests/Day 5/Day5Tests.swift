@@ -1,6 +1,7 @@
 import XCTest
 @testable import AdventOfCode
 
+
 final class Day5Tests: XCTestCase, SolutionTest {
     typealias SUT = Day5
     
