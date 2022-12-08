@@ -42,4 +42,23 @@ extension Day8Tests {
         XCTAssertEqual(tree3?.treesToWest, [2,5,5])
         XCTAssertEqual(tree3?.treesToSouth, [3,4,9])
     }
+    
+    func test_part2() throws {
+        
+        // top middle 5
+        let tree1 = try sut.trees.first { $0.x == 2 && $0.y == 1 }
+        XCTAssertEqual(tree1?.height, 5)
+        XCTAssertEqual(tree1?.isVisible, true)
+        XCTAssertEqual(tree1?.sceneicScore, 4)
+        
+        // top middle 5
+        let tree2 = try sut.trees.first { $0.x == 2 && $0.y == 3 }
+        XCTAssertEqual(tree2?.height, 5)
+        XCTAssertEqual(tree2?.isVisible, true)
+        XCTAssertEqual(tree2?.sceneicScore, 8)
+        
+        try XCTAssertEqual(sut.calculateRow(input: [5, 4, 2, 6, 8], treeHeight: 6), 4)
+        
+        try XCTAssertEqual(sut.calculateRow(input: [3, 3, 3, 2,1,3,2,4,1,3,4,2,5,6,7,8,5,6,7,8], treeHeight: 5), 13)
+    }
 }
