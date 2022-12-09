@@ -5,7 +5,7 @@ final class Day9Tests: XCTestCase, SolutionTest {
     typealias SUT = Day9
     
     func testPartOne() throws {
-        try XCTAssertEqual(sut.calculatePartOne(), 0)
+        try XCTAssertEqual(sut.calculatePartOne(), 13)
     }
     
     func testPartTwo() throws {
@@ -37,5 +37,6 @@ extension Day9Tests {
                                             prevHeadPos: BridgePoint(x: 4, y: 1),
                                             tailPos: BridgePoint(x: 3, y: 0)),
                            BridgePoint(x: 4, y: 1))
+        
     }
 }
