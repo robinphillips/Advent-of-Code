@@ -7,6 +7,8 @@ struct Day8: Solution {
     
     var trees: [Tree] = []
     
+    var trees2: [[Tree2]] = []
+    
     init(input: String) {
         grid = input
             .components(separatedBy: .newlines)
@@ -18,10 +20,7 @@ struct Day8: Solution {
             }
         
         for row in 0 ..< grid.count {
-//            print("\nrow: ", row)
             for item in 0 ..< grid[0].count {
-//                print("\nitem: ", item)
-//                print(grid[row][item])
                 let tree = Tree(height: grid[row][item], x: item, y: row,
                                 treesToNorth: adjacentTreesFor(direction: .North, x: item, y: row),
                                 treesToEast: adjacentTreesFor(direction: .East, x: item, y: row),
@@ -32,7 +31,20 @@ struct Day8: Solution {
             }
         }
         
-        calculateScenicScore()
+        var treeGrid: [[Tree2]] = []
+        
+        for row in 0 ..< grid.count {
+            var tempRow: [Tree2] = []
+            for item in 0 ..< grid[0].count {
+                let tree = Tree2(height: grid[row][item])
+                tempRow.append(tree)
+            }
+            treeGrid.append(tempRow)
+        }
+        
+        trees2 = treeGrid
+        
+        calculateScenicScore2()
         
         func adjacentTreesFor(direction: Direction, x: Int, y: Int) -> [Int] {
             var tempTrees: [Int] = []
@@ -75,37 +87,22 @@ struct Day8: Solution {
             
             return tempTrees
         }
-            
-        func calculateScenicScore() {
-            trees
+        
+        func calculateScenicScore2() {
+            trees2
                 .enumerated()
-                .forEach { index, tree in
-                    let height = tree.height
-//                    var toNorth: [Int] = []
-//                    var toEast: [Int] = []
-//                    var toSouth: [Int] = []
-//                    var toWest: [Int] = []
+                .forEach { y, row in
+                    row
+                        .enumerated()
+                        .forEach { x, tree in
+                            let toNorth = calculateRow(input: returnTreesTo(edge: .North, x: x, y: y), treeHeight: tree.height)
+                            let toEast = calculateRow(input: returnTreesTo(edge: .East, x: x, y: y), treeHeight: tree.height)
+                            let toSouth = calculateRow(input: returnTreesTo(edge: .South, x: x, y: y), treeHeight: tree.height)
+                            let toWest = calculateRow(input: returnTreesTo(edge: .West, x: x, y: y), treeHeight: tree.height)
 
-                
-                    let toNorth = calculateRow(input: tree.treesToNorth, treeHeight: tree.height)
-                    let toEast = calculateRow(input: tree.treesToEast, treeHeight: tree.height)
-                    let toSouth = calculateRow(input: tree.treesToSouth, treeHeight: tree.height)
-                    let toWest = calculateRow(input: tree.treesToWest.reversed(), treeHeight: tree.height)
-
-                    print("trees to: \(tree.x) \(tree.y) height: \(tree.height)")
-//                    print(toNorth.count, toNorth, tree.treesToNorth)
-//                    print(toEast.count, toEast, tree.treesToEast)
-//                    print(toSouth.count, toSouth, tree.treesToSouth)
-//                    print(toWest.count, toWest, tree.treesToWest)
-                    
-//                    var tempScenicScore = (toNorth.count * toEast.count * toSouth.count * toWest.count)
-                    
-//                    trees[index].sceneicScore = tempScenicScore
-//                    print(trees[index].sceneicScore, trees[index].x, trees[index].y)
-                    trees[index].sceneicScore = toNorth * toEast * toSouth * toWest
-                    print("scenic score: ", trees[index].sceneicScore)
-                    print("\n")
+                    trees2[y][x].sceneicScore = toNorth * toEast * toSouth * toWest
                 }
+            }
         }
     }
     
@@ -129,18 +126,39 @@ extension Day8 {
     
     func findHighestScenicScore() -> Int {
         
-        let result = trees
+        let result = trees2
             .compactMap {
-                $0.sceneicScore
-            }
-            .sorted()
-        
-        print(result)
-        
-        return result.max() ?? 0
+                $0.compactMap {
+                    $0.sceneicScore
+                }.max()
+            }.max()
+        return result ?? 0
     }
     
-
+    func returnTreesTo(edge: Direction, x: Int, y: Int) -> [Int] {
+        var tempArray: [Int] = []
+        switch edge {
+        case .North:
+            for i in (0 ..< y).reversed() {
+                tempArray.append(grid[i][x])
+            }
+        case .East:
+            for i in (x+1 ..< grid.count) {
+                tempArray.append(grid[y][i])
+            }
+        case .South:
+            for i in (y+1 ..< grid[x].count) {
+                tempArray.append(grid[i][x])
+            }
+        case .West:
+            for i in (0 ..< x).reversed() {
+                tempArray.append(grid[y][i])
+            }
+        }
+        
+        return tempArray
+    }
+    
     func calculateRow(input: [Int], treeHeight: Int) -> Int {
         var returnInt: [Int] = []
         for i in 0 ..< input.count {
@@ -185,95 +203,14 @@ struct Tree {
     }
 }
 
+struct Tree2 {
+    let height: Int
+    var sceneicScore: Int = 0
+}
+
 enum Direction {
     case North
     case East
     case South
     case West
 }
-
-
-
-
-//                    var toNorth: [Int] = tree.treesToNorth
-//                        .prefix { $0 < height }
-//                        .compactMap(Int.init)
-//                    var toEast: [Int] = tree.treesToEast
-//                        .prefix { $0 < height }
-//                        .compactMap(Int.init)
-//                    var toSouth: [Int] = tree.treesToSouth.reversed()
-//                        .prefix { $0 < height}
-//                        .compactMap(Int.init)
-//                    var toWest: [Int] = tree.treesToWest.reversed()
-//                        .prefix { $0 < height }
-//                        .compactMap(Int.init)
-
-                    
-                    
-//
-//                    let combined = toNorth + toEast + toSouth + toWest
-//                    print("combined: ", combined)
-                    
-                    
-                    
-//                    if toNorth.count == tree.treesToNorth.count ||
-//                        toEast.count == tree.treesToEast.count ||
-//                        toSouth.count == tree.treesToSouth.count ||
-//                        toWest.count == tree.treesToWest.count
-//                    {
-//                        tempScenicScore += 1
-//                    }
-                    
-//                    if toNorth.count < tree.treesToNorth.count {
-//                        toNorth.append(tree.height)
-//                    }
-//
-//                    if toEast.count < tree.treesToEast.count {
-//                        toEast.append(tree.height)
-//                    }
-//
-//                    if toSouth.count < tree.treesToSouth.count {
-//                        toSouth.append(tree.height)
-//                    }
-//
-//                    if toWest.count < tree.treesToWest.count {
-//                        toWest.append(tree.height)
-//                    }
-
-
-//    func calculatedIdeaSpot() -> Int {
-//        var scenicScore = calculatedIdeaSpot() {
-//            didSet {
-//                if oldValue > scenicScore {
-//                    scenicScore = oldValue
-//                }
-//            }
-//        }
-//
-//        trees
-//            .enumerated()
-//            .forEach { index, tree in
-//                let height = tree.height
-//                let toNorth: [Int] = tree.treesToNorth
-//                    .prefix { $0 < height }
-//                let toEast: [Int] = tree.treesToEast
-//                    .prefix { $0 < height }
-//                let toSouth: [Int] = tree.treesToSouth
-//                    .prefix { $0 < height }
-//                let toWest: [Int] = tree.treesToWest
-//                    .prefix { $0 < height }
-//
-//                let combined = toNorth + toEast + toSouth + toWest
-//
-//                scenicScore = combined
-//                    .reduce(0, *)
-////                    .reduce(0) { partialResult, int in
-////                        partialResult * int
-////                    }
-//                if index == trees.count {
-//                    return scenicScore
-//                }
-//            }
-//
-//        break
-//    }

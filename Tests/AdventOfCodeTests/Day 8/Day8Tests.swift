@@ -60,5 +60,25 @@ extension Day8Tests {
         try XCTAssertEqual(sut.calculateRow(input: [5, 4, 2, 6, 8], treeHeight: 6), 4)
         
         try XCTAssertEqual(sut.calculateRow(input: [3, 3, 3, 2,1,3,2,4,1,3,4,2,5,6,7,8,5,6,7,8], treeHeight: 5), 13)
+        
+        try XCTAssertEqual(sut.returnTreesTo(edge: .North, x: 2, y: 1), [3])
+        try XCTAssertEqual(sut.returnTreesTo(edge: .South, x: 2, y: 1), [3, 5, 3])
+        try XCTAssertEqual(sut.returnTreesTo(edge: .East, x: 2, y: 1), [1,2])
+        try XCTAssertEqual(sut.returnTreesTo(edge: .West, x: 2, y: 1), [5,2])
+        
+        try XCTAssertEqual(sut.returnTreesTo(edge: .North, x: 2, y: 3), [3,5,3])
+        try XCTAssertEqual(sut.returnTreesTo(edge: .South, x: 2, y: 3), [3])
+        try XCTAssertEqual(sut.returnTreesTo(edge: .East, x: 2, y: 3), [4,9])
+        try XCTAssertEqual(sut.returnTreesTo(edge: .West, x: 2, y: 3), [3,3])
+        
+        try XCTAssertEqual(sut.returnTreesTo(edge: .North, x: 4, y: 4), [9,2,2,3])
+        try XCTAssertEqual(sut.returnTreesTo(edge: .South, x: 4, y: 4), [])
+        try XCTAssertEqual(sut.returnTreesTo(edge: .East, x: 4, y: 4), [])
+        try XCTAssertEqual(sut.returnTreesTo(edge: .West, x: 4, y: 4), [9,3,5,3])
+        
+        try XCTAssertEqual(sut.returnTreesTo(edge: .North, x: 3, y: 3), [3,1,7])
+        try XCTAssertEqual(sut.returnTreesTo(edge: .South, x: 3, y: 3), [9])
+        try XCTAssertEqual(sut.returnTreesTo(edge: .East, x: 3, y: 3), [9])
+        try XCTAssertEqual(sut.returnTreesTo(edge: .West, x: 3, y: 3), [5,3,3])
     }
 }
