@@ -17,24 +17,25 @@ struct Day9: Solution {
     }
     
     func calculatePartOne() -> Int {
-        calculatePointsVisited()
+        calculatePointsVisited(knots: 2)
     }
     
     func calculatePartTwo() -> Int {
-        0
+        calculatePointsVisited(knots: 10)
     }
 }
 
 extension Day9 {
     
-    func calculatePointsVisited() -> Int {
-        var pointsVisitedByTail: [BridgePoint] = [BridgePoint(x: 0, y: 0)]
-        var currentHeadPos: BridgePoint = BridgePoint(x: 0, y: 0) {
-            didSet {
-                let newTailPos = tailPosition(newHeadPos: currentHeadPos, prevHeadPos: oldValue, tailPos: currentTailPos)
-                pointsVisitedByTail.append(newTailPos)
-            }
+    func calculatePointsVisited(knots: Int) -> Int {
+        var rope: [BridgePoint] = []
+        
+        for _ in 0 ..< knots {
+            rope.append(BridgePoint(x: 0, y: 0))
         }
+        
+        var pointsVisitedByTail: [BridgePoint] = [BridgePoint(x: 0, y: 0)]
+    
         
         var currentTailPos: BridgePoint {
             pointsVisitedByTail.last!
@@ -44,36 +45,71 @@ extension Day9 {
             let direction = $0.0
             let distance = $0.1
             
-            let prevX = currentHeadPos.x
-            let prevY = currentHeadPos.y
+            moveHead(direction: direction, distance: distance)
             
-            for i in 1 ... distance {
-                switch direction {
-                case .up:
-                    currentHeadPos = BridgePoint(x: prevX, y: prevY+i)
-                case .right:
-                    currentHeadPos = BridgePoint(x: prevX+i, y: prevY)
-                case .down:
-                    currentHeadPos = BridgePoint(x: prevX, y: prevY-i)
-                case .left:
-                    currentHeadPos = BridgePoint(x: prevX-i, y: prevY)
-                }
-            }
         }
-            
-        print(Set(pointsVisitedByTail))
-        return Set(pointsVisitedByTail).count
+
         
+        func moveHead(direction: Move, distance: Int) {
+            var dist = distance
+            let oldHead = rope[0]
+            let newHeadPosition: BridgePoint
+            
+            switch direction {
+            case .up:
+                newHeadPosition = BridgePoint(x: rope[0].x, y: rope[0].y+1)
+            case .right:
+                newHeadPosition = BridgePoint(x: rope[0].x+1, y: rope[0].y)
+            case .down:
+                newHeadPosition = BridgePoint(x: rope[0].x, y: rope[0].y-1)
+            case .left:
+                newHeadPosition = BridgePoint(x: rope[0].x-1, y: rope[0].y)
+            }
+            
+            rope[0] = newHeadPosition
+            
+//            let newTailPos = tailPosition(rope: rope, oldHeadPos: oldHead, knots: knots)
+            
+            rope = moveKnots(rope: rope, oldHeadPos: oldHead)
+            
+//            rope[knots-1] = newTailPos
+            
+            pointsVisitedByTail.append(rope[knots-1])
+            
+            dist -= 1
+            
+            if dist > 0 {
+                moveHead(direction: direction, distance: dist)
+            }
+
+        }
+        
+        return Set(pointsVisitedByTail).count
     }
     
-    func tailPosition(newHeadPos: BridgePoint, prevHeadPos: BridgePoint, tailPos: BridgePoint) -> BridgePoint {
+    
+    func moveKnots(rope: [BridgePoint], oldHeadPos: BridgePoint) -> [BridgePoint] {
+        var tempRope = rope
+        for i in 0 ..< rope.count-1 {
+            let distance = checkDistanceBetweenPoints(point1: tempRope[i], point2: tempRope[i+1]) ?? 0
+            print("iteration i: ", i, distance)
+            if distance > 1 && i == 0 {
+                tempRope[i+1] = oldHeadPos
+            } else if distance > 1 {
+               tempRope[i+1] = rope[i]
+            }
+        }
+        return tempRope
+    }
+    
+    
+    func tailPosition(rope: [BridgePoint], oldHeadPos: BridgePoint, knots: Int) -> BridgePoint {
         // if currentHeadPos is more than 1 away from tailPos
-        
-        guard let distance = checkDistanceBetweenPoints(point1: newHeadPos, point2: tailPos) else { return prevHeadPos }
+        guard let distance = checkDistanceBetweenPoints(point1: rope[0], point2: rope[0+1]) else { return oldHeadPos }
         if distance > 1 { // function to check for distance
-            return prevHeadPos // then return prev head pos
+            return oldHeadPos // then return prev head pos
         } else {
-            return tailPos
+            return rope[knots-1]
         }
     }
     
