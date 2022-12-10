@@ -1,13 +1,10 @@
+import Algorithms
+
 struct Day10: Solution {
     static let day = 10
     
     let commands: [[String]]
-    var register: [Int] = [1] {
-        didSet {
-            print(oldValue)
-            print(register)
-        }
-    }
+    var register: [Int] = [1]
     
     init(input: String) {
         commands = input
@@ -34,8 +31,8 @@ struct Day10: Solution {
             }
             return lastValue
         }
-        
-        
+
+        createDisplay()
     }
     
     func calculatePartOne() -> Int {
@@ -63,4 +60,36 @@ extension Day10 {
         register[index-1] * index
     }
     
+    func createDisplay() {
+        let chunks = register
+            .chunks(ofCount: 40)
+            .compactMap {
+                $0.compactMap { $0 }
+            }
+        
+        let result = chunks
+            .compactMap {
+            processSpriteInChunk($0)
+            }
+        
+        print(result)
+    }
+    
+    func processSpriteInChunk(_ chunk: [Int]) -> String {
+        let difference = chunk
+            .enumerated()
+            .compactMap { index, int in
+                return index - int
+            }
+        
+        let string = difference.compactMap {
+            if $0 == -1 || $0 == 0 || $0 == 1 {
+                return "#"
+            } else {
+                return "."
+            }
+        }
+        
+        return string.joined()
+    }
 }

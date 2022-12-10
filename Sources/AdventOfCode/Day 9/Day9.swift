@@ -92,7 +92,7 @@ extension Day9 {
         var tempRope = rope
         for i in 0 ..< rope.count-1 {
             let distance = checkDistanceBetweenPoints(point1: tempRope[i], point2: tempRope[i+1]) ?? 0
-            print("iteration i: ", i, distance)
+//            print("iteration i: ", i, distance)
             if distance > 1 && i == 0 {
                 tempRope[i+1] = oldHeadPos
             } else if distance > 1 {
