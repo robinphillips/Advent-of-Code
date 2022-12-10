@@ -14,4 +14,12 @@ final class Day10Tests: XCTestCase, SolutionTest {
 }
 
 extension Day10Tests {
+    func test_part1() {
+        try XCTAssertEqual(sut.calcSigStr(20), 420)
+        try XCTAssertEqual(sut.calcSigStr(60), 1140)
+        try XCTAssertEqual(sut.calcSigStr(100), 1800)
+        try XCTAssertEqual(sut.calcSigStr(140), 2940)
+        try XCTAssertEqual(sut.calcSigStr(180), 2880)
+        try XCTAssertEqual(sut.calcSigStr(220), 3960)
+    }
 }
