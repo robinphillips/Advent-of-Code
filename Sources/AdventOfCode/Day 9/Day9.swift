@@ -2,7 +2,7 @@ struct Day9: Solution {
     static let day = 9
     
     let instructions: [(Move, Int)]
-    
+
     init(input: String) {
         instructions = input
             .components(separatedBy: .newlines)
@@ -17,125 +17,81 @@ struct Day9: Solution {
     }
     
     func calculatePartOne() -> Int {
-        calculatePointsVisited(knots: 2)
+        Set(processInstructionsPart(knots: 2)).count
     }
     
     func calculatePartTwo() -> Int {
-        calculatePointsVisited(knots: 10)
+        Set(processInstructionsPart(knots: 10)).count
     }
 }
 
 extension Day9 {
     
-    func calculatePointsVisited(knots: Int) -> Int {
-        var rope: [BridgePoint] = []
+    func processInstructionsPart(knots: Int) -> [BridgePoint] {
+        var tailPointsVisited: [BridgePoint] = [BridgePoint(x: 0, y: 0)]
         
-        for _ in 0 ..< knots {
-            rope.append(BridgePoint(x: 0, y: 0))
-        }
-        
-        var pointsVisitedByTail: [BridgePoint] = [BridgePoint(x: 0, y: 0)]
-    
-        
-        var currentTailPos: BridgePoint {
-            pointsVisitedByTail.last!
-        }
-        
-        instructions.forEach {
-            let direction = $0.0
-            let distance = $0.1
-            
-            moveHead(direction: direction, distance: distance)
-            
-        }
-
-        
-        func moveHead(direction: Move, distance: Int) {
-            var dist = distance
-            let oldHead = rope[0]
-            let newHeadPosition: BridgePoint
-            
-            switch direction {
-            case .up:
-                newHeadPosition = BridgePoint(x: rope[0].x, y: rope[0].y+1)
-            case .right:
-                newHeadPosition = BridgePoint(x: rope[0].x+1, y: rope[0].y)
-            case .down:
-                newHeadPosition = BridgePoint(x: rope[0].x, y: rope[0].y-1)
-            case .left:
-                newHeadPosition = BridgePoint(x: rope[0].x-1, y: rope[0].y)
-            }
-            
-            rope[0] = newHeadPosition
-            
-//            let newTailPos = tailPosition(rope: rope, oldHeadPos: oldHead, knots: knots)
-            
-            rope = moveKnots(rope: rope, oldHeadPos: oldHead)
-            
-//            rope[knots-1] = newTailPos
-            
-            pointsVisitedByTail.append(rope[knots-1])
-            
-            dist -= 1
-            
-            if dist > 0 {
-                moveHead(direction: direction, distance: dist)
-            }
-
-        }
-        
-        return Set(pointsVisitedByTail).count
-    }
-    
-    
-    func moveKnots(rope: [BridgePoint], oldHeadPos: BridgePoint) -> [BridgePoint] {
-        var tempRope = rope
-        for i in 0 ..< rope.count-1 {
-            let distance = checkDistanceBetweenPoints(point1: tempRope[i], point2: tempRope[i+1]) ?? 0
-//            print("iteration i: ", i, distance)
-            if distance > 1 && i == 0 {
-                tempRope[i+1] = oldHeadPos
-            } else if distance > 1 {
-               tempRope[i+1] = rope[i]
+        var oldRope: [BridgePoint] = []
+        var rope: [BridgePoint] = pointBuilder(num: knots) {
+            didSet {
+                oldRope = oldValue
             }
         }
-        return tempRope
-    }
-    
-    
-    func tailPosition(rope: [BridgePoint], oldHeadPos: BridgePoint, knots: Int) -> BridgePoint {
-        // if currentHeadPos is more than 1 away from tailPos
-        guard let distance = checkDistanceBetweenPoints(point1: rope[0], point2: rope[0+1]) else { return oldHeadPos }
-        if distance > 1 { // function to check for distance
-            return oldHeadPos // then return prev head pos
-        } else {
-            return rope[knots-1]
+        
+        for i in 0..<instructions.count {
+            for _ in 0..<instructions[i].1 {
+                let direction = instructions[i].0
+                
+                switch direction {
+                case .up:
+                    rope[0].y+=1
+                case .right:
+                    rope[0].x+=1
+                case .down:
+                    rope[0].y-=1
+                case .left:
+                    rope[0].x-=1
+                }
+                print("head:", rope[0])
+                
+                for k in 1 ..< rope.count {
+                    rope[k] = knotPositionPart(newKnotInFront: rope[k-1], prevKnotInFront: oldRope[k-1], currentPos: rope[k])
+                    print("rope knot \(k)", rope[k])
+                }
+                tailPointsVisited.append(rope[knots-1])
+            }
         }
+        
+        return tailPointsVisited
     }
     
-    func checkDistanceBetweenPoints(point1: BridgePoint, point2: BridgePoint) -> Int? {
-        if abs(point1.x - point2.x) > 1 || abs(point1.y - point2.y) > 1 {
-            return 2
-        } else if abs(point1.x - point2.x) == 1 && abs(point1.y - point2.y) == 1 {
-            return 1
-        } else if abs(point1.x - point2.x) == 1 || abs(point1.y - point2.y) == 1 {
-            return 1
-        } else if abs(point1.x - point2.x) > 2 || abs(point1.y - point2.y) > 2 {
-            print("soemthing went wrong, distance is too big")
-            return nil
-        } else {
-            return 0
+    func knotPositionPart(newKnotInFront: BridgePoint, prevKnotInFront: BridgePoint, currentPos: BridgePoint) -> BridgePoint {
+          // if currentHeadPos is more than 1 away from tailPos
+        
+        let dx = newKnotInFront.x - currentPos.x
+        let dy = newKnotInFront.y - currentPos.y
+        
+        var point: BridgePoint = currentPos
+        
+        if abs(dx) > 1 || abs(dy) > 1 {
+            // need to normalise difference to dif 2 to 1 and handle + / -
+            point = BridgePoint(x: currentPos.x + min(max(dx, -1), 1),
+                                     y: currentPos.y + min(max(dy, -1), 1))
         }
+        return point
+     }
+    
+    func pointBuilder(num: Int) -> [BridgePoint] {
+        var points: [BridgePoint] = []
+        for _ in 0 ..< num {
+            points.append(BridgePoint(x: 0, y: 0))
+        }
+        return points
     }
-}
-
-enum BridgeError: Error {
-    case MoveCalcError
 }
 
 struct BridgePoint: Hashable {
-    let x: Int
-    let y: Int
+    var x: Int
+    var y: Int
 }
 
 enum Move: String {
@@ -160,5 +116,3 @@ enum Move: String {
         }
     }
 }
-
-
