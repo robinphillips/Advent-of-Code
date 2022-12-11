@@ -51,11 +51,9 @@ extension Day9 {
                 case .left:
                     rope[0].x-=1
                 }
-                print("head:", rope[0])
                 
                 for k in 1 ..< rope.count {
                     rope[k] = knotPositionPart(newKnotInFront: rope[k-1], prevKnotInFront: oldRope[k-1], currentPos: rope[k])
-                    print("rope knot \(k)", rope[k])
                 }
                 tailPointsVisited.append(rope[knots-1])
             }
