@@ -30,19 +30,17 @@ struct Day19: Solution {
                 let stateSet = Set(state)
                 state = Array(stateSet)
 
-                let maxGeode = state // this is new
+                let maxGeode = state
                     .compactMap({ $0.resources[.geode] })
                     .max()
-                print("max geode for iteration: \(maxGeode ?? 0)") // this is new
+                print("max geode for iteration: \(maxGeode ?? 0)")
 
                 if state.contains(where: { $0.robots[.geode, default: 0] > 0 }) && maxGeode ?? 0 > 2 {
                     state = state.filter {
                         ((maxGeode ?? 0) - $0.resources[.geode, default: 0]) < 2
                     }
                 }
-
                 print("Blueprint \(index), Iteration \(i), Count \(state.count)")
-
             }
 
             guard let geodeCount = state
@@ -70,19 +68,17 @@ struct Day19: Solution {
                 let stateSet = Set(state)
                 state = Array(stateSet)
                 
-                let maxGeode = state // this is new
+                let maxGeode = state
                     .compactMap({ $0.resources[.geode] })
                     .max()
-                print("max geode for iteration: \(maxGeode ?? 0)") // this is new
+                print("max geode for iteration: \(maxGeode ?? 0)")
                 
                 if state.contains(where: { $0.robots[.geode, default: 0] > 0 }) && maxGeode ?? 0 > 2 {
                     state = state.filter {
                         ((maxGeode ?? 0) - $0.resources[.geode, default: 0]) < 1
                     }
                 }
-                
                 print("Blueprint \(index), Iteration \(i), Count \(state.count)")
-                
             }
             
             guard let geodeCount = state
