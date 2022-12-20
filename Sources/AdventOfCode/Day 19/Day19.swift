@@ -1,3 +1,5 @@
+import Algorithms
+
 struct Day19: Solution {
     static let day = 19
     
@@ -6,21 +8,44 @@ struct Day19: Solution {
     
     init(input: String) {
         state = State(robots: [.ore: 1], resources: [:])
-        blueprints = [
-            Blueprint(ore: [.ore: 4], clay: [.ore: 2], obsidian: [.ore: 3, .clay: 14], geode: [.ore: 2, .obsidian: 7]),
-            Blueprint(ore: [.ore: 2], clay: [.ore: 3], obsidian: [.ore: 3, .clay: 8], geode: [.ore: 3, .obsidian: 12])
-        ]
+        blueprints = input
+            .components(separatedBy: .newlines)
+            .filter { $0.isNotEmpty }
+            .map { $0.components(separatedBy: .whitespaces ) }
+            .map {
+                Blueprint(ore: [.ore: Int($0[6])!], clay: [.ore: Int($0[12])!], obsidian: [.ore: Int($0[18])!, .clay: Int($0[21])!], geode: [.ore: Int($0[27])!, .obsidian: Int($0[30])!])
+            }
+        
+        print(blueprints)
     }
     
     func calculatePartOne() -> Int {
         blueprints.enumerated().compactMap { (index, blueprint) -> Int? in
             var state = [self.state]
-            
+
             for i in 0..<24 {
-                print("Blueprint \(index), Iteration \(i), Count \(state.count)")
+
                 state = state.flatMap { $0.nextState(blueprint: blueprint) }
+
+                let maxGeode = state // this is new
+                    .compactMap({ $0.resources[.geode] })
+                    .max()
+                print("max geode for iteration: \(maxGeode ?? 0)") // this is new
+
+                if state.contains(where: { $0.robots[.geode, default: 0] > 0 }) && maxGeode ?? 0 > 2 {
+                    state = state.filter {
+                        ((maxGeode ?? 0) - $0.resources[.geode, default: 0]) < 2
+                    }
+                }
+
+                let stateSet = Set(state)
+
+                state = Array(stateSet)
+
+                print("Blueprint \(index), Iteration \(i), Count \(state.count)")
+
             }
-            
+
             guard let geodeCount = state
                 .compactMap({ $0.resources[.geode] })
                 .max() else {
@@ -31,7 +56,44 @@ struct Day19: Solution {
     }
     
     func calculatePartTwo() -> Int {
-        0
+        var threeBlueprints: [Blueprint] = []
+        threeBlueprints.append(blueprints[0])
+        threeBlueprints.append(blueprints[1])
+        threeBlueprints.append(blueprints[2])
+        
+        return threeBlueprints.enumerated().compactMap { (index, blueprint) -> Int? in
+            var state = [self.state]
+            
+            for i in 0..<32 {
+                
+                state = state.flatMap { $0.nextState(blueprint: blueprint) }
+                
+                let maxGeode = state // this is new
+                    .compactMap({ $0.resources[.geode] })
+                    .max()
+                print("max geode for iteration: \(maxGeode ?? 0)") // this is new
+                
+                if state.contains(where: { $0.robots[.geode, default: 0] > 0 }) && maxGeode ?? 0 > 2 {
+                    state = state.filter {
+                        ((maxGeode ?? 0) - $0.resources[.geode, default: 0]) < 2
+                    }
+                }
+                
+                let stateSet = Set(state)
+                
+                state = Array(stateSet)
+                
+                print("Blueprint \(index), Iteration \(i), Count \(state.count)")
+                
+            }
+            
+            guard let geodeCount = state
+                .compactMap({ $0.resources[.geode] })
+                .max() else {
+                return nil
+            }
+            return geodeCount
+        }.reduce(0, *)
     }
 }
 

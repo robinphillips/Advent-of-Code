@@ -21,7 +21,7 @@ struct Day12: Solution {
                 row
                     .enumerated()
                     .forEach { itemIndex, coordinate in
-                        let temp = MapCoordinate(x: rowIndex, y: itemIndex, letter: result[rowIndex][itemIndex])
+                        let temp = MapCoordinate(x: itemIndex, y: rowIndex, letter: result[rowIndex][itemIndex])
                         tempGridRow.append(temp)
                         allPoints.insert(temp)
                     }
@@ -40,7 +40,7 @@ struct Day12: Solution {
 }
 
 extension Day12 {
-    func findNeighbours(node: MapCoordinate) -> [MapCoordinate] {
+    func findNeighbours(node: MapCoordinate) -> Set<MapCoordinate> {
         allPoints.filter {
             node.x == $0.x-1 && node.y == $0.y ||
             node.x == $0.x+1 && node.y == $0.y ||

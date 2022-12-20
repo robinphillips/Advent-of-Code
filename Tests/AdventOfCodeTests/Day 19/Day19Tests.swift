@@ -4,6 +4,11 @@ import XCTest
 final class Day19Tests: XCTestCase, SolutionTest {
     typealias SUT = Day19
     
+    let blueprints = [
+        Blueprint(ore: [.ore: 4], clay: [.ore: 2], obsidian: [.ore: 3, .clay: 14], geode: [.ore: 2, .obsidian: 7]),
+        Blueprint(ore: [.ore: 2], clay: [.ore: 3], obsidian: [.ore: 3, .clay: 8], geode: [.ore: 3, .obsidian: 12])
+    ]
+    
     func testPartOne() throws {
         try XCTAssertEqual(sut.calculatePartOne(), 33)
     }
@@ -39,12 +44,13 @@ extension Day19Tests {
     }
     
     func test_nextStateAtTime3() {
-        try XCTAssertEqual(sut.state.nextState(blueprint: sut.blueprints[0])
+        
+        try XCTAssertEqual(Set( sut.state.nextState(blueprint: sut.blueprints[0])
             .flatMap { try $0.nextState(blueprint: sut.blueprints[0]) }
-            .flatMap { try $0.nextState(blueprint: sut.blueprints[0]) }, [
+            .flatMap { try $0.nextState(blueprint: sut.blueprints[0]) } ), Set( [
                 State(robots: [.ore: 1, .clay: 1], resources: [.ore: 1]),
                 State(robots: [.ore: 1], resources: [.ore: 3])
-            ])
+            ] ) )
     }
     
     func test_canCreateRobot() throws {
