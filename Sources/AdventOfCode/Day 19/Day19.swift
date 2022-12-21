@@ -1,4 +1,5 @@
 import Algorithms
+import Foundation
 
 struct Day19: Solution {
     static let day = 19
@@ -24,9 +25,10 @@ struct Day19: Solution {
             var state = [self.state]
 
             for i in 0..<24 {
+                if index == 0 && i == 0 { print("start time of part 1: ", Date())}
 
                 state = state.flatMap { $0.nextState(blueprint: blueprint) }
-                    
+
                 let stateSet = Set(state)
                 state = Array(stateSet)
 
@@ -35,12 +37,31 @@ struct Day19: Solution {
                     .max()
                 print("max geode for iteration: \(maxGeode ?? 0)")
 
+                let maxObsidian = state
+                    .compactMap({ $0.resources[.obsidian] })
+                    .max()
+                print("max obsidian for iteration: \(maxObsidian ?? 0)")
+                
+                let maxClay = state
+                    .compactMap({ $0.resources[.clay] })
+                    .max()
+                print("max clay for iteration: \(maxClay ?? 0)")
+
                 if state.contains(where: { $0.robots[.geode, default: 0] > 0 }) && maxGeode ?? 0 > 2 {
                     state = state.filter {
                         ((maxGeode ?? 0) - $0.resources[.geode, default: 0]) < 2
                     }
+                } else if state.contains(where: { $0.robots[.obsidian, default: 0] > 2 }) && maxObsidian ?? 0 > 7 {
+                    state = state.filter {
+                        ((maxObsidian ?? 0) - $0.resources[.obsidian, default: 0]) < 4 || $0.robots[.geode, default: 0] > 0
+                    }
+                } else if state.contains(where: { $0.robots[.clay, default: 0] > 4 }) && maxClay ?? 0 > 7 {
+                    state = state.filter {
+                        ((maxObsidian ?? 0) - $0.resources[.clay, default: 0]) < 4 || $0.robots[.geode, default: 0] > 0
+                    }
                 }
                 print("Blueprint \(index), Iteration \(i), Count \(state.count)")
+                if index == blueprints.count-1 && i == 23 { print("end time of part 1: ", Date())}
             }
 
             guard let geodeCount = state
@@ -62,6 +83,7 @@ struct Day19: Solution {
             var state = [self.state]
             
             for i in 0..<32 {
+                if index == 0 && i == 0 { print("start time of part 2: ", Date())}
                 
                 state = state.flatMap { $0.nextState(blueprint: blueprint) }
                 
@@ -73,12 +95,31 @@ struct Day19: Solution {
                     .max()
                 print("max geode for iteration: \(maxGeode ?? 0)")
                 
+                let maxObsidian = state
+                    .compactMap({ $0.resources[.obsidian] })
+                    .max()
+                print("max obsidian for iteration: \(maxObsidian ?? 0)")
+                
+                let maxClay = state
+                    .compactMap({ $0.resources[.clay] })
+                    .max()
+                print("max clay for iteration: \(maxClay ?? 0)")
+                
                 if state.contains(where: { $0.robots[.geode, default: 0] > 0 }) && maxGeode ?? 0 > 2 {
                     state = state.filter {
                         ((maxGeode ?? 0) - $0.resources[.geode, default: 0]) < 1
                     }
+                } else if state.contains(where: { $0.robots[.obsidian, default: 0] > 2 }) && maxObsidian ?? 0 > 7 {
+                    state = state.filter {
+                        ((maxObsidian ?? 0) - $0.resources[.obsidian, default: 0]) < 3 || $0.robots[.geode, default: 0] > 0
+                    }
+                } else if state.contains(where: { $0.robots[.clay, default: 0] > 4 }) && maxClay ?? 0 > 7 {
+                    state = state.filter {
+                        ((maxObsidian ?? 0) - $0.resources[.clay, default: 0]) < 4 || $0.robots[.geode, default: 0] > 0
+                    }
                 }
                 print("Blueprint \(index), Iteration \(i), Count \(state.count)")
+                if index == 2 && i == 31 { print("end time of part 2: ", Date())}
             }
             
             guard let geodeCount = state
