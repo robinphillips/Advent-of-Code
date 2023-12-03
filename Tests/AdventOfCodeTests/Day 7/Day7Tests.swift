@@ -5,7 +5,6 @@ final class Day7Tests: XCTestCase, SolutionTest {
     typealias SUT = Day7
     
     func testPartOne() throws {
-        try print(sut.lines)
         try XCTAssertEqual(sut.calculatePartOne(), 0)
     }
     
