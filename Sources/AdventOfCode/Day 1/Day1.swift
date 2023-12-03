@@ -1,14 +1,23 @@
 struct Day1: Solution {
     static let day = 1
     
-    var calories: [Int] = []
+    let exampleInput = """
+1abc2
+pqr3stu8vwx
+a1b2c3d4e5f
+treb7uchet
+"""
+    let exampleAnswer = 142
+    
+    let input: [String]
     
     /// Initialise your solution
     ///
     /// - parameters:
     ///   - input: Contents of the `Day1.input` file within the same folder as this source file
     init(input: String) {
-
+        self.input = input.components(separatedBy: .whitespacesAndNewlines)
+            .filter { $0.isNotEmpty }
     }
 
     /// Return your answer to the main activity of the advent calendar
