@@ -1,14 +1,6 @@
 struct Day1: Solution {
     static let day = 1
     
-    let exampleInput = """
-1abc2
-pqr3stu8vwx
-a1b2c3d4e5f
-treb7uchet
-"""
-    let exampleAnswer = 142
-    
     let input: [String]
     
     /// Initialise your solution
