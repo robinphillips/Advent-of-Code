@@ -4,7 +4,7 @@ import Foundation
 struct Runner {
     static func main() throws {
         try [
-//            Day1.self,
+            Day1.self,
 //            Day2.self,
 //            Day3.self,
 //            Day4.self,
@@ -22,12 +22,12 @@ struct Runner {
 //            Day16.self,
 //            Day17.self,
 //            Day18.self,
-            Day19.self,
-            Day20.self,
-            Day21.self,
-            Day22.self,
-            Day23.self,
-            Day24.self,
+//            Day19.self,
+//            Day20.self,
+//            Day21.self,
+//            Day22.self,
+//            Day23.self,
+//            Day24.self,
             Day25.self
         ].forEach { day in
             try runDay(day)
