@@ -46,7 +46,6 @@ extension Day1 {
     }
     
     func part2(strings: [String]) -> Int {
-    
         strings.enumerated().map { index, string in
             processString(string, index: index)
         }
@@ -79,11 +78,7 @@ extension Day1 {
     
 }
 
-
-
-
-extension Day1 {
-    
+extension Day1 {    
     struct StringNumber: Hashable {
         let index: Int
         let originalString: String
