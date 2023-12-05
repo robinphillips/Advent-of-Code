@@ -22,7 +22,7 @@ struct Day1: Solution {
     /// Return your solution to the extension activity
     /// _ N.B. This is only unlocked when you have completed part one! _
     func calculatePartTwo() -> Int {
-        calcPart2(strings: <#T##[String]#>)
+        calcPart2(strings: input)
     }
 }
 
@@ -42,13 +42,86 @@ extension Day1 {
     }
     
     func calcPart2(strings: [String]) -> Int {
-        0
+        part2(strings: strings)
     }
+    
+    func part2(strings: [String]) -> Int {
+    
+        strings.enumerated().map { index, string in
+            processString(string, index: index)
+        }
+        .reduce(0, +)
+    }
+    
+    func processString(_ string: String, index: Int) -> Int {
+            var stringNumber = StringNumber(index: index, originalString: string)
+            
+            Numbers.allCases.forEach { number in
+                if let strRange = string.range(of: number.rawValue, options: .forcedOrdering) {
+                    stringNumber.compareBoundingNumber(number.int, index: strRange)
+                }
+                
+                if let strRange = string.range(of: number.rawValue, options: .backwards) {
+                    stringNumber.compareBoundingNumber(number.int, index: strRange)
+                }
+                
+                if let numRange = string.range(of: number.int.description, options: .forcedOrdering) {
+                    stringNumber.compareBoundingNumber(number.int, index: numRange)
+                }
+                
+                if let numRange = string.range(of: number.int.description, options: .backwards) {
+                    stringNumber.compareBoundingNumber(number.int, index: numRange)
+                }
+            }
+            print("stringNumber.index \(stringNumber.index): ", stringNumber.returnString)
+            return Int(stringNumber.returnString)!
+        }
+    
 }
 
 
+
+
 extension Day1 {
-    enum Numbers: String {
+    
+    struct StringNumber: Hashable {
+        let index: Int
+        let originalString: String
+        var left: BoundingNumber?
+        var right: BoundingNumber?
+        
+        var returnString: String {
+            guard let left, let right else { return "" }
+            return "\(String(describing: left.num))\(String(describing: right.num))"
+        }
+        
+        mutating func compareBoundingNumber(_ num: Int, index: Range<String.Index>) {
+            
+            if let left {
+                if index.lowerBound < left.stringIndex {
+                    self.left = BoundingNumber(num: num, stringIndex: index.lowerBound)
+                }
+            } else {
+                self.left = BoundingNumber(num: num, stringIndex: index.lowerBound)
+            }
+            
+            if let right {
+                if index.upperBound > right.stringIndex {
+                    self.right = BoundingNumber(num: num, stringIndex: index.upperBound)
+                }
+            } else {
+                self.right = BoundingNumber(num: num, stringIndex: index.upperBound)
+            }
+            
+        }
+    }
+    
+    struct BoundingNumber: Hashable {
+        let num: Int
+        let stringIndex: String.Index
+    }
+    
+    enum Numbers: String, CaseIterable {
         case one
         case two
         case three
