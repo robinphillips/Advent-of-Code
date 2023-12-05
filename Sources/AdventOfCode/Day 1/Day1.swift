@@ -78,7 +78,7 @@ extension Day1 {
     
 }
 
-extension Day1 {    
+extension Day1 {
     struct StringNumber: Hashable {
         let index: Int
         let originalString: String
@@ -91,7 +91,6 @@ extension Day1 {
         }
         
         mutating func compareBoundingNumber(_ num: Int, index: Range<String.Index>) {
-            
             if let left {
                 if index.lowerBound < left.stringIndex {
                     self.left = BoundingNumber(num: num, stringIndex: index.lowerBound)
