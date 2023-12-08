@@ -72,7 +72,6 @@ extension Day1 {
                     stringNumber.compareBoundingNumber(number.int, index: numRange)
                 }
             }
-            print("stringNumber.index \(stringNumber.index): ", stringNumber.returnString)
             return Int(stringNumber.returnString)!
         }
     
