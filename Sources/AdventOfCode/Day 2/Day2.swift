@@ -13,12 +13,23 @@ struct Day2: Solution {
     }
     
     func calculatePartTwo() -> Int {
-        0
+        part2(strings: input)
     }
 }
 
 
 extension Day2 {
+    func part2(strings: [String]) -> Int {
+        let games = strings.map {
+            splitString($0)
+        }
+        
+        return games.compactMap {
+            $0?.power
+        }.reduce(0, +)
+    }
+
+    
     func part1(strings: [String]) -> Int {
         let games = strings.map {
             splitString($0)
@@ -89,6 +100,10 @@ extension Day2 {
             } else {
                 false
             }
+        }
+        
+        var power: Int {
+            maxRed * maxGreen * maxBlue
         }
     }
     
